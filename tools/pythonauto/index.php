@@ -23,7 +23,6 @@ $row = GradeUtil::gradeLoad();
 $OLDCODE = false;
 $json = array();
 $editor = 1;
-$python3 = 1;
 if ( $row !== false && isset($row['json'])) {
     $json = json_decode($row['json'], true);
     if ( isset($json["code"]) ) $OLDCODE = $json["code"];
@@ -44,6 +43,16 @@ require_once "exercises3.php";
 
 // Get any due date information
 $dueDate = SettingsForm::getDueDate();
+
+$menu = false;
+if ( $LAUNCH->link && $LAUNCH->user && $LAUNCH->user->instructor ) {
+    $menu = new \Tsugi\UI\MenuSet();
+    $menu->addLeft('Student Data', 'grades.php');
+    if ( $CFG->launchactivity ) {
+        $menu->addRight(__('Launches'), 'analytics');
+    }
+    $menu->addRight(__('Settings'), '#', /* push */ false, SettingsForm::attr());
+}
 
 $OUTPUT->header();
 
@@ -465,7 +474,7 @@ word-wrap: break-word; /* IE 5.5+ */
 </style>
 <?php
 $OUTPUT->bodyStart();
-$OUTPUT->topNav();
+$OUTPUT->topNav($menu);
 
 if ( $USER->instructor ) {
     SettingsForm::start();
@@ -528,6 +537,16 @@ Este autograder mantiene su puntuación más alta, no su última puntuación. O 
         Tu puntuación no cambiará.
         </p>
 <?php } ?>
+<?php
+    $identity = __("Conectado como: ").$USER->key;
+    if ( strlen($USER->email) > 0 ) {
+        $identity .= ' ' . htmlentities($USER->email);
+    }
+    if ( strlen($USER->displayname) > 0 ) {
+        $identity .= ' ' . htmlentities($USER->displayname);
+    }
+    echo("<p>".$identity."</p>")
+?>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -555,19 +574,6 @@ if ( $dueDate->message ) {
         echo('<button onclick="resetcode()" class="btn btn-default" type="button">Reiniciar</button> ');
     }
     echo('<button onclick="$(\'#info\').modal();return false;" class="btn btn-default" type="button"><span class="glyphicon glyphicon-info-sign"></span></button>'."\n");
-    if ( $USER->instructor ) {
-        if ( $CFG->launchactivity ) {
-            echo('<a href="analytics" class="btn btn-default">Analytics</a> ');
-        }
-        SettingsForm::button();
-    }
-    if ( $USER->instructor ) {
-        if ( $EX === false ) {
-            echo(' <a href="grades.php" class="btn btn-default" target="_blank">View Student Code</a>'."\n");
-        } else {
-            echo(' <a href="grades.php" class="btn btn-default" target="_blank">View Grades</a>'."\n");
-        }
-    }
 ?>
 <img id="spinner" src="static/spinner.gif" style="vertical-align: middle;display: none">
 <span id="redo" style="color:red;display:none"> Por favor, corrija su código y vuelva a ejecutar. </span>
