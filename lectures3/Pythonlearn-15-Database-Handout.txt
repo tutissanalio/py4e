@@ -1,10 +1,10 @@
-Python for Everybody Database Handout
+Python para Todos - Información Bases de Datos
 
-https://www.py4e.com/lectures3/Pythonlearn-15-Database-Handout.txt
+https://es.py4e.com/lectures3/Pythonlearn-15-Database-Handout.txt
 
-Download and Install: http://sqlitebrowser.org/
+Descargar e Instalar: http://sqlitebrowser.org/
 
-Single Table SQL
+SQL para crear una sola Tabla
 
 CREATE TABLE "Users" ("name" TEXT, "email" TEXT)
 
@@ -27,7 +27,9 @@ SELECT * FROM Users ORDER BY email
 
 SELECT * FROM Users ORDER BY name DESC
 
-Multi-Table SQL:
+-----------------------------------------------------------------
+
+SQL para crear múltiples Tablas:
 
 CREATE TABLE "Artist" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, 
@@ -82,8 +84,9 @@ FROM Track JOIN Genre JOIN Album JOIN Artist
     ON Track.genre_id = Genre.id AND Track.album_id = Album.id 
     AND Album.artist_id = Artist.id
  
+-----------------------------------------------------------------
 
-Many-Many Relationship
+Relaciones Muchos-a-muchos
 
 CREATE TABLE User (
     id     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
